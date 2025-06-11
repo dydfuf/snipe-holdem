@@ -1,0 +1,28 @@
+{
+  "name": "@repo/fsm",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "test": "vitest run",
+    "dev": "vitest watch"
+  },
+  "dependencies": {
+    "xstate": "5.19.4"
+  },
+  "devDependencies": {
+    "@xstate/graph": "3.0.4",
+    "@xstate/test": "0.5.1",
+    "tsup": "8.5.0",
+    "typescript": "5.8.2",
+    "vitest": "3.2.3"
+  }
+}
