@@ -1,7 +1,5 @@
 import { assign } from 'xstate'
-import { HandRank } from '../types/cards'
 import type { GameContext } from '../types/context'
-import type { Player } from '../types/context'
 import { applySnipes, compareHands, evaluateHand } from '../utils/rank'
 
 // AIDEV‑NOTE: 저격 홀덤 승자 결정 - game-rule.md 섹션 6, 9 기준

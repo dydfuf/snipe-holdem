@@ -1,11 +1,18 @@
 import { createMachine } from 'xstate'
 import { addPlayer, bumpVersion, dealCards, payWinner } from '../actions'
+import { checkSurvival } from '../actions/checkSurvival'
+import { processSnipe } from '../actions/processSnipe'
+import { revealCommunity } from '../actions/revealCommunity'
+import { startSnipePhase } from '../actions/startSnipePhase'
 import { canJoin } from '../guards'
+import { canSnipe } from '../guards/canSnipe'
+import { gameIsOver } from '../guards/isGameOver'
+import { isSnipeComplete } from '../guards/isSnipePhaseComplete'
 import type { GameContext } from '../types/context'
+import type { GameEvent } from '../types/events'
 import { bettingMachine } from './betting.machine'
 
 // AIDEV‑NOTE: 저격 홀덤 게임 머신 - game-rule.md 섹션 2 게임 흐름 구현
-type GameEvent = { type: 'JOIN'; playerId: string } | { type: 'START' }
 
 export const gameMachine = createMachine(
   {
@@ -38,7 +45,7 @@ export const gameMachine = createMachine(
             actions: ['addPlayer', 'bumpVersion'],
             guard: 'canJoin',
           },
-          START: { guard: 'ready', target: 'deal' },
+          START_GAME: { guard: 'ready', target: 'deal' },
         },
       },
       deal: {
@@ -59,7 +66,7 @@ export const gameMachine = createMachine(
         },
       },
       reveal_community: {
-        entry: 'revealCommunity',
+        entry: ['revealCommunity', 'bumpVersion'],
         always: 'bet_round2',
       },
       bet_round2: {
@@ -76,11 +83,23 @@ export const gameMachine = createMachine(
         },
       },
       snipe_phase: {
-        // AIDEV‑TODO: 저격 선언 단계 구현 필요
-        always: 'showdown',
+        entry: ['startSnipePhase', 'bumpVersion'],
+        on: {
+          SNIPE_ACTION: {
+            actions: ['processSnipe', 'bumpVersion'],
+            guard: 'canSnipe',
+          },
+        },
+        always: [{ guard: 'isSnipeComplete', target: 'showdown' }],
       },
       showdown: {
-        entry: ['payWinner', 'bumpVersion'],
+        entry: ['payWinner', 'checkSurvival', 'bumpVersion'],
+        always: [
+          { guard: 'gameIsOver', target: 'game_over' },
+          { target: 'deal' }, // 다음 라운드 시작
+        ],
+      },
+      game_over: {
         type: 'final',
       },
     },
@@ -89,21 +108,19 @@ export const gameMachine = createMachine(
     guards: {
       ready: ({ context }: { context: GameContext }) => context.players.length >= 2,
       canJoin: canJoin as any,
+      canSnipe: canSnipe as any,
+      isSnipeComplete: isSnipeComplete as any,
+      gameIsOver: gameIsOver as any,
     },
     actions: {
       addPlayer: addPlayer as any,
       bumpVersion: bumpVersion as any,
       dealCards: dealCards as any,
       payWinner: payWinner as any,
-      revealCommunity: ({ context }: { context: GameContext }) => {
-        // 공유 카드 2장 추가 공개 (총 4장)
-        if (context.communityRevealed === 2) {
-          const newCards = context.deck.slice(0, 2)
-          context.community.push(...newCards)
-          context.communityRevealed = 4
-          context.deck.splice(0, 2)
-        }
-      },
+      revealCommunity: revealCommunity as any,
+      startSnipePhase: startSnipePhase as any,
+      processSnipe: processSnipe as any,
+      checkSurvival: checkSurvival as any,
     },
   }
 )

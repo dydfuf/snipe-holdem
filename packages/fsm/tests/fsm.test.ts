@@ -81,7 +81,7 @@ describe('게임 상태 머신', () => {
 
     it('플레이어 1명으로는 게임을 시작할 수 없어야 함', () => {
       actor.send({ type: 'JOIN', playerId: 'player1' })
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       expect(actor.getSnapshot().value).toBe('waiting')
     })
@@ -89,7 +89,7 @@ describe('게임 상태 머신', () => {
     it('플레이어 2명이면 게임을 시작할 수 있어야 함', () => {
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       expect(actor.getSnapshot().value).not.toBe('waiting')
     })
@@ -98,7 +98,7 @@ describe('게임 상태 머신', () => {
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
       actor.send({ type: 'JOIN', playerId: 'player3' })
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       expect(actor.getSnapshot().value).not.toBe('waiting')
     })
@@ -115,14 +115,14 @@ describe('게임 상태 머신', () => {
 
     it('게임 상태가 올바르게 전환되어야 함', () => {
       // 게임 시작
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       // 딜링 후 바로 bet_round1로 전환되어야 함 (저격 홀덤 규칙)
       expect(actor.getSnapshot().value).toBe('bet_round1')
     })
 
     it('게임 시작 시 플레이어들에게 카드가 딜링되어야 함', () => {
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       const context = actor.getSnapshot().context
 
@@ -141,7 +141,7 @@ describe('게임 상태 머신', () => {
     })
 
     it('딜링 시 플레이어 베팅과 폴드 상태가 설정되어야 함', () => {
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       const newContext = actor.getSnapshot().context
       // 저격 홀덤 규칙: 기본 베팅 1칩
@@ -153,7 +153,7 @@ describe('게임 상태 머신', () => {
     it('카드 딜링 시 버전이 증가해야 함', () => {
       const initialVersion = actor.getSnapshot().context.version
 
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
 
       expect(actor.getSnapshot().context.version).toBeGreaterThan(initialVersion)
     })
@@ -166,7 +166,7 @@ describe('게임 상태 머신', () => {
       actor = createActor(gameMachine).start()
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
     })
 
     it('딜링 후 베팅 단계로 전환되어야 함', () => {
@@ -224,7 +224,7 @@ describe('게임 상태 머신', () => {
       expect(actor.getSnapshot().context.version).toBe(initialVersion + 2)
 
       // 시작 액션도 버전 증가 (카드 딜링 + 버전 업)
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
       expect(actor.getSnapshot().context.version).toBeGreaterThan(initialVersion + 2)
     })
   })
@@ -238,12 +238,12 @@ describe('게임 상태 머신', () => {
 
     it('플레이어 수가 부족하면 게임 시작을 막아야 함', () => {
       // 플레이어 없음
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
       expect(actor.getSnapshot().value).toBe('waiting')
 
       // 플레이어 1명
       actor.send({ type: 'JOIN', playerId: 'player1' })
-      actor.send({ type: 'START' })
+      actor.send({ type: 'START_GAME' })
       expect(actor.getSnapshot().value).toBe('waiting')
     })
 

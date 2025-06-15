@@ -6,7 +6,7 @@ import type { Card, HandRank } from './cards'
 export type ClientIntent =
   | { type: 'JOIN'; playerId: string }
   | { type: 'LEAVE'; playerId: string }
-  | { type: 'START' }
+  | { type: 'START_GAME' }
   | { type: 'CHECK' }
   | { type: 'CALL' }
   | { type: 'RAISE'; amount: number }
