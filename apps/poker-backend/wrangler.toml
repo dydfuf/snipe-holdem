@@ -1,0 +1,20 @@
+name = "sniper-holdem-worker"
+compatibility_date = "2025-06-15"
+
+main = "./src/worker.ts"
+
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "RoomDO"
+
+[[durable_objects.bindings]]
+name = "MATCH"
+class_name = "MatchDO"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sniper_holdem"
+database_id = "<D1_DATABASE_ID>"   # wrangler secret put 로 주입
+
+[vars]
+JWT_SECRET = "<placeholder>"
