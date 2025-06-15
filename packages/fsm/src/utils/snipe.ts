@@ -32,11 +32,9 @@ export function canPlayerSnipe(player: Player): boolean {
 
 /** 저격 선언 순서 계산 (버튼부터 시계방향) */
 export function getSnipeOrder(players: Player[], dealerIdx: number): Player[] {
-  const activePlayers = players.filter((p) => canPlayerSnipe(p))
-
   // 버튼부터 시계방향으로 정렬
   const orderedPlayers: Player[] = []
-  for (let i = 0; i < activePlayers.length; i++) {
+  for (let i = 0; i < players.length; i++) {
     const idx = (dealerIdx + i) % players.length
     const player = players[idx]
     if (canPlayerSnipe(player)) {

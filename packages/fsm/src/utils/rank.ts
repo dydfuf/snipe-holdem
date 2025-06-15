@@ -115,23 +115,29 @@ function evaluateFiveCards(cards: Card[]): HandEvaluation {
   }
 }
 
-/** 두 족보 비교 (a > b면 양수, a < b면 음수, 같으면 0) */
+/** 두 족보 비교 (a > b면 1, a < b면 -1, 같으면 0) */
 export function compareHands(a: HandEvaluation, b: HandEvaluation): number {
   // 저격으로 강등된 족보는 하위 처리
   const aRankValue = a.isSnipedDown ? -1 : getRankValue(a.rank)
   const bRankValue = b.isSnipedDown ? -1 : getRankValue(b.rank)
 
-  if (aRankValue !== bRankValue) return aRankValue - bRankValue
+  if (aRankValue !== bRankValue) {
+    return aRankValue > bRankValue ? 1 : -1
+  }
 
   // 같은 등급이면 숫자 비교
-  if (a.primaryNumber !== b.primaryNumber) return a.primaryNumber - b.primaryNumber
+  if (a.primaryNumber !== b.primaryNumber) {
+    return a.primaryNumber > b.primaryNumber ? 1 : -1
+  }
   if (a.secondaryNumber && b.secondaryNumber && a.secondaryNumber !== b.secondaryNumber) {
-    return a.secondaryNumber - b.secondaryNumber
+    return a.secondaryNumber > b.secondaryNumber ? 1 : -1
   }
 
   // 키커 비교
   for (let i = 0; i < Math.min(a.kickers.length, b.kickers.length); i++) {
-    if (a.kickers[i] !== b.kickers[i]) return a.kickers[i] - b.kickers[i]
+    if (a.kickers[i] !== b.kickers[i]) {
+      return a.kickers[i] > b.kickers[i] ? 1 : -1
+    }
   }
 
   return 0

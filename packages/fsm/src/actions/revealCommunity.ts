@@ -5,15 +5,14 @@ import type { GameContext } from '../types/context'
 // 1차 베팅 후 공유 카드 2장 추가 공개 (총 4장)
 
 export const revealCommunity = assign(({ context }: { context: GameContext }) => {
-  // 현재 사용된 카드 수 계산 (플레이어 개인 카드 + 기존 공유 카드)
-  const usedCards = context.players.length * 2 + context.communityRevealed
-
-  // 덱에서 2장 더 뽑아서 공유 카드에 추가
-  const newCommunityCards = [context.deck[usedCards], context.deck[usedCards + 1]]
+  // dealCards에서 이미 공유 카드 4장이 예약되어 있음
+  // 덱의 앞 2장을 추가로 공개
+  const newCommunityCards = context.deck.slice(0, 2)
+  const remainingDeck = context.deck.slice(2)
 
   return {
     community: [...context.community, ...newCommunityCards],
     communityRevealed: context.communityRevealed + 2,
-    version: context.version + 1,
+    deck: remainingDeck,
   }
 }) 

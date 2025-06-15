@@ -28,33 +28,44 @@ export const bettingMachine = createMachine(
               ({
                 context,
                 event,
-              }: { context: BettingCtx; event: Extract<BettingEvent, { type: 'BET' }> }) => ({
-                pot: context.pot + event.amount,
-                highest: Math.max(context.highest, event.amount),
-              })
+              }: { context: BettingCtx; event: Extract<BettingEvent, { type: 'BET' }> }) => {
+                const updatedOrder = context.order.map((p, i) =>
+                  i === context.idx ? { ...p, bet: p.bet + event.amount } : p
+                )
+
+                const currentPlayerNewBet = updatedOrder[context.idx].bet
+
+                return {
+                  pot: context.pot + event.amount,
+                  highest: Math.max(context.highest, currentPlayerNewBet),
+                  order: updatedOrder,
+                }
+              }
             ),
             target: 'next',
           },
-          FOLD: { target: 'next' },
+          FOLD: {
+            actions: assign(({ context }: { context: BettingCtx }) => ({
+              order: context.order.map((p, i) => (i === context.idx ? { ...p, folded: true } : p)),
+            })),
+            target: 'next',
+          },
         },
       },
       next: {
-        always: [
-          { guard: 'done', target: 'done' },
-          {
-            actions: assign(({ context }: { context: BettingCtx }) => ({
-              idx: (context.idx + 1) % context.order.length,
-            })),
-            target: 'turn',
-          },
-        ],
+        always: [{ guard: 'done', target: 'done' }],
       },
       done: { type: 'final' },
     },
   },
   {
     guards: {
-      done: ({ context }: { context: BettingCtx }) => context.idx === context.order.length - 1,
+      // AIDEV‑NOTE: 베팅 라운드 완료 조건 - 활성 플레이어 수 기반
+      done: ({ context }: { context: BettingCtx }) => {
+        const activePlayers = context.order.filter((p) => !p.folded)
+        // 활성 플레이어가 1명만 있고, 전체 플레이어도 1명이면 완료
+        return activePlayers.length === 1 && context.order.length === 1
+      },
     },
   }
 )

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createActor } from 'xstate'
-import { gameMachine } from '../src/machines'
+import { gameMachine } from '../src/machines/game.machine'
 import { HandRank } from '../src/types/cards'
 import type { GameContext, Player } from '../src/types/context'
 import { canPlayerSnipe, getSnipeOrder, isValidSnipeDeclaration } from '../src/utils/snipe'
@@ -9,12 +9,12 @@ import { canConfirmSurvival, isGameOver, processSurvivalConfirmation } from '../
 describe('게임 상태 머신', () => {
   describe('초기 상태', () => {
     it('waiting 상태로 시작해야 함', () => {
-      const actor = createActor(gameMachine).start()
+      const actor = createActor(gameMachine, { input: {} }).start()
       expect(actor.getSnapshot().value).toBe('waiting')
     })
 
     it('초기 컨텍스트가 빈 값들로 설정되어야 함', () => {
-      const actor = createActor(gameMachine).start()
+      const actor = createActor(gameMachine, { input: {} }).start()
       const context = actor.getSnapshot().context
 
       expect(context.players).toEqual([])
@@ -35,7 +35,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
     })
 
     it('첫 번째 플레이어가 참가할 수 있어야 함', () => {
@@ -87,7 +87,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
     })
 
     it('플레이어 1명으로는 게임을 시작할 수 없어야 함', () => {
@@ -119,7 +119,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
     })
@@ -174,7 +174,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
       actor.send({ type: 'START_GAME' })
@@ -359,7 +359,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
     })
 
     it('불변성을 유지한 컨텍스트 업데이트가 이루어져야 함', () => {
@@ -403,7 +403,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
     })
 
     it('플레이어 수가 부족하면 게임 시작을 막아야 함', () => {
@@ -430,7 +430,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
     })
 
     it('waiting 상태에서 유효하지 않은 이벤트를 무시해야 함', () => {
@@ -456,7 +456,7 @@ describe('게임 상태 머신', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-      actor = createActor(gameMachine).start()
+      actor = createActor(gameMachine, { input: {} }).start()
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
       actor.send({ type: 'START_GAME' })

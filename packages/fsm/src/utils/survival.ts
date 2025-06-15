@@ -23,6 +23,7 @@ export function processSurvivalConfirmation(
   paidChips: number
 } {
   const requiredChips = SURVIVAL_CHIPS[initialPlayerCount] || 75
+  const paymentChips = 75 // 실제 지불은 항상 75칩
 
   if (!canConfirmSurvival(player, initialPlayerCount)) {
     throw new Error(`Player ${player.id} cannot confirm survival`)
@@ -31,10 +32,10 @@ export function processSurvivalConfirmation(
   return {
     updatedPlayer: {
       ...player,
-      chips: player.chips - requiredChips,
+      chips: player.chips - paymentChips,
       isSurvived: true,
     },
-    paidChips: requiredChips,
+    paidChips: paymentChips,
   }
 }
 

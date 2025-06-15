@@ -1,11 +1,15 @@
 import { createMachine } from 'xstate'
-import { addPlayer, bumpVersion, dealCards, payWinner } from '../actions'
-import { checkSurvival } from '../actions/checkSurvival'
-import { processSnipe } from '../actions/processSnipe'
-import { revealCommunity } from '../actions/revealCommunity'
-import { startSnipePhase } from '../actions/startSnipePhase'
-import { canJoin } from '../guards'
-import { canSnipe } from '../guards/canSnipe'
+import {
+  addPlayer,
+  bumpVersion,
+  checkSurvival,
+  dealCards,
+  payWinner,
+  processSnipe,
+  revealCommunity,
+  startSnipePhase,
+} from '../actions'
+import { canJoin, canSnipe } from '../guards'
 import { gameIsOver } from '../guards/isGameOver'
 import { isSnipeComplete } from '../guards/isSnipePhaseComplete'
 import type { GameContext } from '../types/context'
@@ -20,9 +24,10 @@ export const gameMachine = createMachine(
     types: {
       context: {} as GameContext,
       events: {} as GameEvent,
+      input: {} as { rng?: () => number } | undefined,
     },
     initial: 'waiting',
-    context: {
+    context: ({ input }: { input?: { rng?: () => number } | undefined }) => ({
       players: [],
       deck: [],
       community: [],
@@ -32,12 +37,13 @@ export const gameMachine = createMachine(
       version: 0,
       dealerIdx: 0,
       currentIdx: 0,
-      bettingRound: 1,
+      bettingRound: 1 as const,
       snipeDeclarations: [],
       snipeIdx: 0,
       handEvaluations: undefined,
       initialPlayerCount: 0,
-    },
+      rng: input?.rng,
+    }),
     states: {
       waiting: {
         on: {

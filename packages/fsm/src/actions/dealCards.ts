@@ -18,7 +18,7 @@ export const dealCards = assign(({ context }: { context: GameContext }) => {
   const players = context.players.map((p, i) => ({
     ...p,
     hand: [deck[i * 2], deck[i * 2 + 1]] as Hand,
-    chips: startingChips, // 인원수별 시작 칩 설정
+    chips: startingChips - 1, // 인원수별 시작 칩에서 기본 베팅 1칩 차감
     bet: 1, // 기본 베팅 1칩 (game-rule.md 섹션 2.2)
     folded: false,
     isSurvived: false,
@@ -30,7 +30,7 @@ export const dealCards = assign(({ context }: { context: GameContext }) => {
   const initialCommunity = deck.slice(communityStart, communityStart + 2)
 
   return {
-    deck: deck.slice(communityStart + 4), // 공유 카드 4장 예약 후 남은 덱
+    deck: deck.slice(communityStart + 2), // 실제 딜링된 카드만 제거 (플레이어 카드 + 초기 공유 카드 2장)
     players,
     community: initialCommunity,
     communityRevealed: 2,
