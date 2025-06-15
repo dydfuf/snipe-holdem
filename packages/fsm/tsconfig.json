@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2021",
+    "lib": ["ES2021", "DOM"],
     "module": "ESNext",
     "moduleResolution": "Node",
     "declaration": true,
@@ -8,7 +9,8 @@
     "strict": true,
     "rootDir": "src",
     "outDir": "dist",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/test/**/*", "tests/**/*", "dist", "node_modules"],

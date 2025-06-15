@@ -1,5 +1,12 @@
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
 
+interface Env {
+  ROOM: DurableObjectNamespace
+  MATCH: DurableObjectNamespace
+  DB: D1Database
+  JWT_SECRET: string
+}
+
 export default {
   async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url)
@@ -20,11 +27,8 @@ export default {
     // 정적 자산 프락시 (클라이언트 CSR 번들)
     return getAssetFromKV({ request: req, waitUntil: ctx.waitUntil.bind(ctx) })
   },
-} satisfies ExportedHandler
+} satisfies ExportedHandler<Env>
 
-interface Env {
-  ROOM: DurableObjectNamespace
-  MATCH: DurableObjectNamespace
-  DB: D1Database
-  JWT_SECRET: string
-}
+// Durable Object exports for testing
+export { RoomDO } from './room.do'
+export { MatchDO } from './match.do'
