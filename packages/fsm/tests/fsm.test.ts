@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createActor } from 'xstate'
-import { gameMachine } from '../machines'
-import type { GameContext, Player } from '../types/context'
+import { gameMachine } from '../src/machines'
+import type { GameContext, Player } from '../src/types/context'
 
 describe('게임 상태 머신', () => {
   describe('초기 상태', () => {
