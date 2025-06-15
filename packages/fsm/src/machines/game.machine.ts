@@ -113,12 +113,14 @@ export const gameMachine = createMachine(
   {
     guards: {
       ready: ({ context }: { context: GameContext }) => context.players.length >= 2,
+      // AIDEV-NOTE: XState v5 타입 시스템 제한으로 인한 임시 캐스팅
       canJoin: canJoin as any,
       canSnipe: canSnipe as any,
       isSnipeComplete: isSnipeComplete as any,
       gameIsOver: gameIsOver as any,
     },
     actions: {
+      // AIDEV-NOTE: XState v5 타입 시스템 제한으로 인한 임시 캐스팅
       addPlayer: addPlayer as any,
       bumpVersion: bumpVersion as any,
       dealCards: dealCards as any,

@@ -115,32 +115,59 @@ function evaluateFiveCards(cards: Card[]): HandEvaluation {
   }
 }
 
-/** 두 족보 비교 (a > b면 1, a < b면 -1, 같으면 0) */
-export function compareHands(a: HandEvaluation, b: HandEvaluation): number {
-  // 저격으로 강등된 족보는 하위 처리
+/** 족보 등급 값 비교 */
+function compareRankValues(a: HandEvaluation, b: HandEvaluation): number {
   const aRankValue = a.isSnipedDown ? -1 : getRankValue(a.rank)
   const bRankValue = b.isSnipedDown ? -1 : getRankValue(b.rank)
 
   if (aRankValue !== bRankValue) {
     return aRankValue > bRankValue ? 1 : -1
   }
+  return 0
+}
 
-  // 같은 등급이면 숫자 비교
+/** 주요 숫자 비교 */
+function comparePrimaryNumbers(a: HandEvaluation, b: HandEvaluation): number {
   if (a.primaryNumber !== b.primaryNumber) {
     return a.primaryNumber > b.primaryNumber ? 1 : -1
   }
+  return 0
+}
+
+/** 보조 숫자 비교 */
+function compareSecondaryNumbers(a: HandEvaluation, b: HandEvaluation): number {
   if (a.secondaryNumber && b.secondaryNumber && a.secondaryNumber !== b.secondaryNumber) {
     return a.secondaryNumber > b.secondaryNumber ? 1 : -1
   }
+  return 0
+}
 
-  // 키커 비교
+/** 키커 카드들 비교 */
+function compareKickers(a: HandEvaluation, b: HandEvaluation): number {
   for (let i = 0; i < Math.min(a.kickers.length, b.kickers.length); i++) {
     if (a.kickers[i] !== b.kickers[i]) {
       return a.kickers[i] > b.kickers[i] ? 1 : -1
     }
   }
-
   return 0
+}
+
+/** 두 족보 비교 (a > b면 1, a < b면 -1, 같으면 0) */
+export function compareHands(a: HandEvaluation, b: HandEvaluation): number {
+  // 1. 족보 등급 비교
+  const rankComparison = compareRankValues(a, b)
+  if (rankComparison !== 0) return rankComparison
+
+  // 2. 주요 숫자 비교
+  const primaryComparison = comparePrimaryNumbers(a, b)
+  if (primaryComparison !== 0) return primaryComparison
+
+  // 3. 보조 숫자 비교
+  const secondaryComparison = compareSecondaryNumbers(a, b)
+  if (secondaryComparison !== 0) return secondaryComparison
+
+  // 4. 키커 비교
+  return compareKickers(a, b)
 }
 
 /** 저격 적용 - 해당하는 족보를 하위로 강등 */

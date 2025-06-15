@@ -1,5 +1,5 @@
 import { assign } from 'xstate'
-import type { SnipeDeclaration } from '../types/cards'
+import type { Card, HandRank, SnipeDeclaration } from '../types/cards'
 import type { GameContext } from '../types/context'
 import { isValidSnipeDeclaration } from '../utils/snipe'
 
@@ -12,7 +12,7 @@ export const processSnipe = assign(
     event,
   }: {
     context: GameContext
-    event: { type: 'SNIPE_ACTION'; playerId: string; targetRank?: any; targetNumber?: any }
+    event: { type: 'SNIPE_ACTION'; playerId: string; targetRank?: HandRank; targetNumber?: Card }
   }) => {
     const { playerId, targetRank, targetNumber } = event
 
