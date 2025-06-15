@@ -3,20 +3,8 @@ import { type Card, HandRank } from '../src/types/cards'
 import type { Player } from '../src/types/context'
 import { createDeck } from '../src/utils/deck'
 import { applySnipes, compareHands, evaluateHand } from '../src/utils/rank'
-import {
-  canPlayerSnipe,
-  getAvailableSnipeTargets,
-  getSnipeOrder,
-  isSnipePhaseComplete,
-  isValidSnipeDeclaration,
-} from '../src/utils/snipe'
-import {
-  canConfirmSurvival,
-  distributeRemainingChips,
-  getActivePlayerCount,
-  isGameOver,
-  processSurvivalConfirmation,
-} from '../src/utils/survival'
+import { getAvailableSnipeTargets, isSnipePhaseComplete } from '../src/utils/snipe'
+import { distributeRemainingChips, getActivePlayerCount, isGameOver } from '../src/utils/survival'
 
 describe('유틸리티 함수 테스트', () => {
   describe('덱 관리', () => {

@@ -2,38 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { createActor } from 'xstate'
 import { gameMachine } from '../src/machines/game.machine'
 import type { Card, HandRank } from '../src/types/cards'
-import type { GameContext } from '../src/types/context'
 
 // AIDEV‑NOTE: 저격 홀덤 엔드투엔드 테스트 - game-rule.md 전체 게임 플로우 검증
 
 describe('저격 홀덤 엔드투엔드 게임 시나리오', () => {
-  // 테스트용 고정 RNG - 결정론적 테스트를 위해
-  const createFixedRng = (sequence: number[]) => {
-    let index = 0
-    return () => {
-      const value = sequence[index % sequence.length]
-      index++
-      return value
-    }
-  }
-
-  // 테스트용 고정 덱 생성 - 예측 가능한 결과를 위해
-  const createTestDeck = (): Card[] => {
-    // 특정 패턴으로 카드 배치: 스트레이트, 페어 등이 나오도록
-    return [
-      // Player1 hand: [1, 2]
-      1, 2,
-      // Player2 hand: [3, 4]
-      3, 4,
-      // Player3 hand: [5, 6] (if exists)
-      5, 6,
-      // Community cards: [7, 8, 9, 10]
-      7, 8, 9, 10,
-      // 나머지 덱
-      1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10,
-    ]
-  }
-
   // 게임 머신 생성 헬퍼
   const createTestGameMachine = () => {
     return createActor(gameMachine, { input: {} }).start()
@@ -45,17 +17,6 @@ describe('저격 홀덤 엔드투엔드 게임 시나리오', () => {
     expectedState: string
   ) => {
     expect(actor.getSnapshot().value).toBe(expectedState)
-  }
-
-  // 컨텍스트 검증 헬퍼
-  const expectContext = (
-    actor: ReturnType<typeof createTestGameMachine>,
-    checks: Partial<GameContext>
-  ) => {
-    const context = actor.getSnapshot().context
-    for (const [key, value] of Object.entries(checks)) {
-      expect(context[key as keyof GameContext]).toEqual(value)
-    }
   }
 
   describe('기본 2명 게임 완주 시나리오', () => {
@@ -213,12 +174,6 @@ describe('저격 홀덤 엔드투엔드 게임 시나리오', () => {
   })
 
   describe('게임 종료 시나리오', () => {
-    let actor: ReturnType<typeof createTestGameMachine>
-
-    beforeEach(() => {
-      actor = createTestGameMachine()
-    })
-
     it('최종 생존자 결정으로 게임이 종료되어야 함', () => {
       // 게임 종료 조건 테스트
       const players = [

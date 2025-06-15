@@ -197,7 +197,6 @@ describe('베팅 액션 유틸리티 테스트', () => {
         { id: 'player3', chips: 100, bet: 0, folded: false, isSurvived: false },
         { id: 'player4', chips: 100, bet: 0, folded: false, isSurvived: false },
       ]
-      const dealerIdx = 0
 
       const activePlayers = players.filter((p) => !p.folded && !p.isSurvived)
       expect(activePlayers.map((p) => p.id)).toEqual(['player1', 'player3', 'player4'])
@@ -321,12 +320,6 @@ describe('베팅 액션 유틸리티 테스트', () => {
     })
 
     it('여러 올인 상황을 처리해야 함', () => {
-      const players: Player[] = [
-        { id: 'player1', chips: 0, bet: 5, folded: false, isSurvived: false }, // 첫 번째 올인
-        { id: 'player2', chips: 0, bet: 15, folded: false, isSurvived: false }, // 두 번째 올인
-        { id: 'player3', chips: 10, bet: 25, folded: false, isSurvived: false },
-      ]
-
       // 첫 번째 팟: 5칩 × 3명 = 15칩 (모든 플레이어 참여)
       const pot1 = 5 * 3
 

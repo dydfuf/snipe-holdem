@@ -22,7 +22,6 @@ export function processSurvivalConfirmation(
   updatedPlayer: Player
   paidChips: number
 } {
-  const requiredChips = SURVIVAL_CHIPS[initialPlayerCount] || 75
   const paymentChips = 75 // 실제 지불은 항상 75칩
 
   if (!canConfirmSurvival(player, initialPlayerCount)) {
@@ -42,7 +41,6 @@ export function processSurvivalConfirmation(
 /** 생존 확정자들에게 남은 칩 분배 */
 export function distributeRemainingChips(players: Player[], totalChips: number): Player[] {
   const survivedPlayers = players.filter((p) => p.isSurvived)
-  const zeroChipPlayers = players.filter((p) => !p.isSurvived && p.chips === 0)
 
   if (totalChips === 0 || survivedPlayers.length === 0) {
     return players

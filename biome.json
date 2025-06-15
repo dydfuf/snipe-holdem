@@ -41,6 +41,10 @@
       "suspicious": {
         "noExplicitAny": "warn",
         "noArrayIndexKey": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error"
       }
     }
   },

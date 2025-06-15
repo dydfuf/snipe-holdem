@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { createActor } from 'xstate'
 import { gameMachine } from '../src/machines/game.machine'
 import { HandRank } from '../src/types/cards'
-import type { GameContext, Player } from '../src/types/context'
+import type { Player } from '../src/types/context'
 import { canPlayerSnipe, getSnipeOrder, isValidSnipeDeclaration } from '../src/utils/snipe'
 import { canConfirmSurvival, isGameOver, processSurvivalConfirmation } from '../src/utils/survival'
 

@@ -172,7 +172,6 @@ describe('베팅 머신 통합 테스트', () => {
 
       it('레이즈 액션이 올바르게 계산되어야 함', () => {
         const currentBet = 5
-        const playerBet = 2
         const raiseAmount = 3
         const totalBet = currentBet + raiseAmount
 
@@ -309,7 +308,6 @@ describe('베팅 머신 통합 테스트', () => {
         },
       }).start()
 
-      const initialState = actor.getSnapshot()
 
       // 음수 베팅 시도 (실제로는 가드에서 막혀야 함)
       actor.send({ type: 'BET', amount: -5 })
