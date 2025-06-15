@@ -1,7 +1,8 @@
 import type { GameContext } from '../types/context'
+
 import { canPlayerSnipe } from '../utils/snipe'
 
-// AIDEV‑NOTE: 저격 선언 가능 여부 가드 - game-rule.md 섹션 4 기준
+// AIDEV-NOTE: 저격 선언 가능 여부 가드 - game-rule.md 섹션 4 기준
 
 export function canSnipe({
   context,
@@ -16,4 +17,4 @@ export function canSnipe({
   if (!player) return false
 
   return canPlayerSnipe(player)
-} 
+}

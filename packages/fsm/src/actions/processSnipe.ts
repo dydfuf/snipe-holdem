@@ -1,9 +1,10 @@
 import { assign } from 'xstate'
+
 import type { Card, HandRank, SnipeDeclaration } from '../types/cards'
 import type { GameContext } from '../types/context'
 import { isValidSnipeDeclaration } from '../utils/snipe'
 
-// AIDEV‑NOTE: 저격 선언 처리 - game-rule.md 섹션 2.7, 4 기준
+// AIDEV-NOTE: 저격 선언 처리 - game-rule.md 섹션 2.7, 4 기준
 // 중복 저격 방지 및 선언 순서 관리
 
 export const processSnipe = assign(
@@ -51,4 +52,4 @@ export const processSnipe = assign(
       version: context.version + 1,
     }
   }
-) 
+)

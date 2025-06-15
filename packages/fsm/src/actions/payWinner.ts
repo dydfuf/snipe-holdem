@@ -1,8 +1,9 @@
 import { assign } from 'xstate'
+
 import type { GameContext } from '../types/context'
 import { applySnipes, compareHands, evaluateHand } from '../utils/rank'
 
-// AIDEV‑NOTE: 저격 홀덤 승자 결정 - game-rule.md 섹션 6, 9 기준
+// AIDEV-NOTE: 저격 홀덤 승자 결정 - game-rule.md 섹션 6, 9 기준
 // 저격 적용 후 족보 비교하여 승자 결정
 
 export const payWinner = assign(({ context }: { context: GameContext }) => {

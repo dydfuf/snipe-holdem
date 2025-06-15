@@ -1,6 +1,6 @@
 import type { Card, HandRank } from './cards'
 
-// AIDEV‑NOTE: 저격 홀덤 이벤트 시스템 - game-rule.md 섹션 2 게임 흐름 지원
+// AIDEV-NOTE: 저격 홀덤 이벤트 시스템 - game-rule.md 섹션 2 게임 흐름 지원
 
 /* 클라이언트 → Room DO */
 export type ClientIntent =

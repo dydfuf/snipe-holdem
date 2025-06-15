@@ -2,7 +2,7 @@ import type { Card, SnipeDeclaration } from '../types/cards'
 import { HandRank } from '../types/cards'
 import type { Player } from '../types/context'
 
-// AIDEV‑NOTE: 저격 홀덤 저격 시스템 - game-rule.md 섹션 4 기준
+// AIDEV-NOTE: 저격 홀덤 저격 시스템 - game-rule.md 섹션 4 기준
 
 /** 저격 선언이 유효한지 확인 */
 export function isValidSnipeDeclaration(
@@ -87,4 +87,4 @@ export function isSnipePhaseComplete(players: Player[]): boolean {
 
   // 모든 자격 있는 플레이어가 선언했거나 패스했는지 확인
   return eligiblePlayers.every((p) => p.snipeDeclaration !== undefined || p.folded || p.isSurvived)
-} 
+}

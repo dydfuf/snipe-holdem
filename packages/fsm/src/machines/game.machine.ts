@@ -16,7 +16,7 @@ import type { GameContext } from '../types/context'
 import type { GameEvent } from '../types/events'
 import { bettingMachine } from './betting.machine'
 
-// AIDEV‑NOTE: 저격 홀덤 게임 머신 - game-rule.md 섹션 2 게임 흐름 구현
+// AIDEV-NOTE: 저격 홀덤 게임 머신 - game-rule.md 섹션 2 게임 흐름 구현
 
 export const gameMachine = createMachine(
   {

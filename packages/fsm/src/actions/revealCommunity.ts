@@ -1,7 +1,8 @@
 import { assign } from 'xstate'
+
 import type { GameContext } from '../types/context'
 
-// AIDEV‑NOTE: 공유 카드 추가 공개 - game-rule.md 섹션 2.5 기준
+// AIDEV-NOTE: 공유 카드 추가 공개 - game-rule.md 섹션 2.5 기준
 // 1차 베팅 후 공유 카드 2장 추가 공개 (총 4장)
 
 export const revealCommunity = assign(({ context }: { context: GameContext }) => {
@@ -15,4 +16,4 @@ export const revealCommunity = assign(({ context }: { context: GameContext }) =>
     communityRevealed: context.communityRevealed + 2,
     deck: remainingDeck,
   }
-}) 
+})

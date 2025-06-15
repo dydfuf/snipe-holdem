@@ -3,7 +3,7 @@ import { createActor } from 'xstate'
 import { gameMachine } from '../src/machines/game.machine'
 import type { Card, HandRank } from '../src/types/cards'
 
-// AIDEV‑NOTE: 저격 홀덤 엔드투엔드 테스트 - game-rule.md 전체 게임 플로우 검증
+// AIDEV-NOTE: 저격 홀덤 엔드투엔드 테스트 - game-rule.md 전체 게임 플로우 검증
 
 describe('저격 홀덤 엔드투엔드 게임 시나리오', () => {
   // 게임 머신 생성 헬퍼
@@ -434,4 +434,4 @@ describe('저격 홀덤 엔드투엔드 게임 시나리오', () => {
       }
     })
   })
-}) 
+})

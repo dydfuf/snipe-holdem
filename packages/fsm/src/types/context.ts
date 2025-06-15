@@ -1,6 +1,6 @@
 import type { Card, Hand, HandEvaluation, SnipeDeclaration } from './cards'
 
-// AIDEV‑NOTE: 저격 홀덤 게임 컨텍스트 - game-rule.md 전체 규칙 지원
+// AIDEV-NOTE: 저격 홀덤 게임 컨텍스트 - game-rule.md 전체 규칙 지원
 
 export interface Player {
   id: string

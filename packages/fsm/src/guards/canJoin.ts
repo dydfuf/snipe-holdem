@@ -1,6 +1,6 @@
 import type { GameContext } from '../types/context'
 
-// AIDEV‑NOTE: 플레이어 참여 가능 여부 체크 - 중복 방지 및 최대 6명 제한
+// AIDEV-NOTE: 플레이어 참여 가능 여부 체크 - 중복 방지 및 최대 6명 제한
 export const canJoin = ({
   context,
   event,

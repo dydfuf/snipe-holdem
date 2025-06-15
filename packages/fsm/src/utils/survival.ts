@@ -1,7 +1,8 @@
 import type { Player } from '../types/context'
+
 import { SURVIVAL_CHIPS } from '../types/context'
 
-// AIDEV‑NOTE: 저격 홀덤 생존 확정 시스템 - game-rule.md 섹션 1, 2.10 기준
+// AIDEV-NOTE: 저격 홀덤 생존 확정 시스템 - game-rule.md 섹션 1, 2.10 기준
 
 /** 플레이어가 생존 확정 가능한지 확인 */
 export function canConfirmSurvival(player: Player, initialPlayerCount: number): boolean {
@@ -84,4 +85,4 @@ export function getActivePlayerCount(players: Player[]): number {
 export function isGameOver(players: Player[]): boolean {
   const activeCount = getActivePlayerCount(players)
   return activeCount <= 1
-} 
+}

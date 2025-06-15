@@ -60,7 +60,7 @@ export const bettingMachine = createMachine(
   },
   {
     guards: {
-      // AIDEV‑NOTE: 베팅 라운드 완료 조건 - 활성 플레이어 수 기반
+      // AIDEV-NOTE: 베팅 라운드 완료 조건 - 활성 플레이어 수 기반
       done: ({ context }: { context: BettingCtx }) => {
         const activePlayers = context.order.filter((p) => !p.folded)
         // 활성 플레이어가 1명만 있고, 전체 플레이어도 1명이면 완료

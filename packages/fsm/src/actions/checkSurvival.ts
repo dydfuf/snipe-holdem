@@ -1,4 +1,5 @@
 import { assign } from 'xstate'
+
 import type { GameContext } from '../types/context'
 import {
   canConfirmSurvival,
@@ -6,7 +7,7 @@ import {
   processSurvivalConfirmation,
 } from '../utils/survival'
 
-// AIDEV‑NOTE: 생존 확정 처리 - game-rule.md 섹션 2.10 기준
+// AIDEV-NOTE: 생존 확정 처리 - game-rule.md 섹션 2.10 기준
 // 시작칩+15 이상 달성 시 75칩 지불 후 생존 확정
 
 export const checkSurvival = assign(({ context }: { context: GameContext }) => {
@@ -36,4 +37,4 @@ export const checkSurvival = assign(({ context }: { context: GameContext }) => {
     players: updatedPlayers,
     version: context.version + 1,
   }
-}) 
+})

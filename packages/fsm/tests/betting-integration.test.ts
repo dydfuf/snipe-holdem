@@ -98,7 +98,7 @@ describe('베팅 머신 통합 테스트', () => {
     let actor: ReturnType<typeof createActor>
 
     beforeEach(() => {
-              actor = createActor(gameMachine, { input: {} }).start()
+      actor = createActor(gameMachine, { input: {} }).start()
       actor.send({ type: 'JOIN', playerId: 'player1' })
       actor.send({ type: 'JOIN', playerId: 'player2' })
       actor.send({ type: 'START_GAME' })
@@ -308,7 +308,6 @@ describe('베팅 머신 통합 테스트', () => {
         },
       }).start()
 
-
       // 음수 베팅 시도 (실제로는 가드에서 막혀야 함)
       actor.send({ type: 'BET', amount: -5 })
 
@@ -401,4 +400,4 @@ describe('베팅 머신 통합 테스트', () => {
       expect(duration).toBeLessThan(100)
     })
   })
-}) 
+})

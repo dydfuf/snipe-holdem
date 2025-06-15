@@ -279,4 +279,4 @@ describe('유틸리티 함수 테스트', () => {
       expect(() => getAvailableSnipeTargets(snipes)).not.toThrow()
     })
   })
-}) 
+})

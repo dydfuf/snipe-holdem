@@ -6,7 +6,7 @@ import {
   type SnipeDeclaration,
 } from '../types/cards'
 
-// AIDEV‑NOTE: 저격 홀덤 족보 평가 - game-rule.md 섹션 3, 6 기준
+// AIDEV-NOTE: 저격 홀덤 족보 평가 - game-rule.md 섹션 3, 6 기준
 // 개인 2장 + 공유 4장 중 최적의 5장으로 족보 구성
 
 /** 개인 카드 + 공유 카드에서 최고 족보 평가 */

@@ -3,7 +3,7 @@ import { createActor } from 'xstate'
 import { gameMachine } from '../src/machines/game.machine'
 import type { Card, HandRank } from '../src/types/cards'
 
-// AIDEV‑NOTE: 저격 홀덤 간단한 엔드투엔드 테스트 - 실제 게임 시나리오 검증
+// AIDEV-NOTE: 저격 홀덤 간단한 엔드투엔드 테스트 - 실제 게임 시나리오 검증
 // game-rule.md의 모든 규칙을 실제 게임 플로우로 테스트
 
 describe('저격 홀덤 간단한 엔드투엔드 테스트', () => {
@@ -302,4 +302,4 @@ describe('저격 홀덤 간단한 엔드투엔드 테스트', () => {
       expect(snapshot2.context.players.length).toBe(snapshot1.context.players.length + 1)
     })
   })
-}) 
+})

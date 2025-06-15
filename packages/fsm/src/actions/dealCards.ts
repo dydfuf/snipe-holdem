@@ -1,13 +1,14 @@
 import { assign } from 'xstate'
+
 import type { Hand } from '../types/cards'
 import type { GameContext } from '../types/context'
 import { STARTING_CHIPS } from '../types/context'
 import { createDeck, shuffle } from '../utils/deck'
 
-// AIDEV‑NOTE: 저격 홀덤 카드 딜링 - game-rule.md 섹션 2 기준
+// AIDEV-NOTE: 저격 홀덤 카드 딜링 - game-rule.md 섹션 2 기준
 // 개인 2장 + 공유 2장 초기 딜링, 인원별 시작 칩 설정
 export const dealCards = assign(({ context }: { context: GameContext }) => {
-  // AIDEV‑TODO: 머신 옵션을 통해 rng 함수 주입받도록 리팩토링 필요
+  // AIDEV-NOTE: RNG 함수는 머신 input을 통해 주입받아 결정론적 테스트 지원
   const rng = context.rng || Math.random
   const deck = shuffle(createDeck(), rng)
 
