@@ -17,10 +17,14 @@ describe('게임 상태 머신', () => {
       expect(context.players).toEqual([])
       expect(context.deck).toEqual([])
       expect(context.community).toEqual([])
+      expect(context.communityRevealed).toBe(0)
       expect(context.pot).toBe(0)
+      expect(context.currentBet).toBe(0)
       expect(context.version).toBe(0)
       expect(context.dealerIdx).toBe(0)
       expect(context.currentIdx).toBe(0)
+      expect(context.bettingRound).toBe(1)
+      expect(context.snipeDeclarations).toEqual([])
     })
   })
 
@@ -113,8 +117,8 @@ describe('게임 상태 머신', () => {
       // 게임 시작
       actor.send({ type: 'START' })
 
-      // 딜링 후 바로 bet_preflop로 전환되어야 함
-      expect(actor.getSnapshot().value).toBe('bet_preflop')
+      // 딜링 후 바로 bet_round1로 전환되어야 함 (저격 홀덤 규칙)
+      expect(actor.getSnapshot().value).toBe('bet_round1')
     })
 
     it('게임 시작 시 플레이어들에게 카드가 딜링되어야 함', () => {
@@ -128,24 +132,22 @@ describe('게임 상태 머신', () => {
       expect(context.players[1].hand).toBeDefined()
       expect(context.players[1].hand).toHaveLength(2)
 
-      // 덱이 줄어들어야 함
-      expect(context.deck.length).toBeLessThan(52)
+      // 덱이 줄어들어야 함 (40장 덱에서 카드들이 딜링됨)
+      expect(context.deck.length).toBeLessThan(40)
 
-      // 초기에는 커뮤니티 카드가 비어있어야 함
-      expect(context.community).toEqual([])
+      // 저격 홀덤 규칙: 초기에 공유 카드 2장이 공개됨
+      expect(context.community).toHaveLength(2)
+      expect(context.communityRevealed).toBe(2)
     })
 
-    it('딜링 시 플레이어 베팅과 폴드 상태가 리셋되어야 함', () => {
-      // 수동으로 베팅/폴드 값을 먼저 설정
-      const context = actor.getSnapshot().context
-      context.players[0].bet = 50
-      context.players[0].folded = true
-
+    it('딜링 시 플레이어 베팅과 폴드 상태가 설정되어야 함', () => {
       actor.send({ type: 'START' })
 
       const newContext = actor.getSnapshot().context
-      expect(newContext.players[0].bet).toBe(0)
+      // 저격 홀덤 규칙: 기본 베팅 1칩
+      expect(newContext.players[0].bet).toBe(1)
       expect(newContext.players[0].folded).toBe(false)
+      expect(newContext.players[0].isSurvived).toBe(false)
     })
 
     it('카드 딜링 시 버전이 증가해야 함', () => {
@@ -168,8 +170,8 @@ describe('게임 상태 머신', () => {
     })
 
     it('딜링 후 베팅 단계로 전환되어야 함', () => {
-      // 딜링 후 bet_preflop로 가야 함
-      expect(actor.getSnapshot().value).toBe('bet_preflop')
+      // 딜링 후 bet_round1로 가야 함 (저격 홀덤 규칙)
+      expect(actor.getSnapshot().value).toBe('bet_round1')
     })
 
     it('베팅 머신에 올바른 입력이 전달되어야 함', () => {
@@ -179,6 +181,7 @@ describe('게임 상태 머신', () => {
       expect(context.players.length).toBeGreaterThanOrEqual(2)
       expect(context.dealerIdx).toBeDefined()
       expect(context.pot).toBeDefined()
+      expect(context.currentBet).toBeDefined()
     })
   })
 

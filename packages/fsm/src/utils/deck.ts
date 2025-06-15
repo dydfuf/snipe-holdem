@@ -1,8 +1,9 @@
 import type { Card } from '../types/cards'
 
-/** 52 장의 단순 숫자 덱 반환 */
+// AIDEV‑NOTE: 저격 홀덤 전용 40장 덱 - game-rule.md 섹션 1 기준
+/** 40장의 1-10 숫자 덱 반환 (각 숫자 × 4장) */
 export function createDeck(): Card[] {
-  return Array.from({ length: 52 }, (_, i) => ((i % 13) + 1) as Card)
+  return Array.from({ length: 40 }, (_, i) => ((i % 10) + 1) as Card)
 }
 
 /** Fisher–Yates 셔플 */

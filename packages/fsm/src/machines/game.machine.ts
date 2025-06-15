@@ -4,6 +4,7 @@ import { canJoin } from '../guards'
 import type { GameContext } from '../types/context'
 import { bettingMachine } from './betting.machine'
 
+// AIDEV‑NOTE: 저격 홀덤 게임 머신 - game-rule.md 섹션 2 게임 흐름 구현
 type GameEvent = { type: 'JOIN'; playerId: string } | { type: 'START' }
 
 export const gameMachine = createMachine(
@@ -18,10 +19,17 @@ export const gameMachine = createMachine(
       players: [],
       deck: [],
       community: [],
+      communityRevealed: 0,
       pot: 0,
+      currentBet: 0,
       version: 0,
       dealerIdx: 0,
       currentIdx: 0,
+      bettingRound: 1,
+      snipeDeclarations: [],
+      snipeIdx: 0,
+      handEvaluations: undefined,
+      initialPlayerCount: 0,
     },
     states: {
       waiting: {
@@ -35,23 +43,40 @@ export const gameMachine = createMachine(
       },
       deal: {
         entry: ['dealCards', 'bumpVersion'],
-        always: 'bet_preflop',
+        always: 'bet_round1',
       },
-      bet_preflop: {
+      bet_round1: {
         invoke: {
           id: 'bet1',
           src: bettingMachine,
           input: ({ context }: { context: GameContext }) => ({
             order: context.players,
             idx: context.dealerIdx,
-            highest: 0,
+            highest: context.currentBet,
             pot: context.pot,
           }),
-          onDone: { target: 'flop' },
+          onDone: { target: 'reveal_community' },
         },
       },
-      flop: {
-        entry: 'revealFlop',
+      reveal_community: {
+        entry: 'revealCommunity',
+        always: 'bet_round2',
+      },
+      bet_round2: {
+        invoke: {
+          id: 'bet2',
+          src: bettingMachine,
+          input: ({ context }: { context: GameContext }) => ({
+            order: context.players,
+            idx: context.dealerIdx,
+            highest: context.currentBet,
+            pot: context.pot,
+          }),
+          onDone: { target: 'snipe_phase' },
+        },
+      },
+      snipe_phase: {
+        // AIDEV‑TODO: 저격 선언 단계 구현 필요
         always: 'showdown',
       },
       showdown: {
@@ -70,8 +95,14 @@ export const gameMachine = createMachine(
       bumpVersion: bumpVersion as any,
       dealCards: dealCards as any,
       payWinner: payWinner as any,
-      revealFlop: ({ context }: { context: GameContext }) => {
-        context.community.push(...context.deck.splice(0, 3))
+      revealCommunity: ({ context }: { context: GameContext }) => {
+        // 공유 카드 2장 추가 공개 (총 4장)
+        if (context.communityRevealed === 2) {
+          const newCards = context.deck.slice(0, 2)
+          context.community.push(...newCards)
+          context.communityRevealed = 4
+          context.deck.splice(0, 2)
+        }
       },
     },
   }
