@@ -23,4 +23,6 @@ export interface GameContext {
   dealerIdx: number
   /** 현재 행동 차례 */
   currentIdx: number
+  /** RNG 함수 인젝터 – 결정론적 재생용 */
+  rng?: () => number
 }
