@@ -32,6 +32,18 @@ export const SURVIVAL_CHIPS: Record<number, number> = {
   6: 75,
 }
 
+/** 게임 스냅샷 - D1 저장용 */
+export interface GameSnapshot {
+  version: number
+  data: GameContext
+}
+
+/** XState v5 서비스 인터페이스 - AGENTS.md 섹션 2-3 */
+export interface GameServices {
+  saveSnapshot: (snapshot: GameSnapshot) => Promise<void>
+  loadSnapshot: () => Promise<GameSnapshot | null>
+}
+
 export interface GameContext {
   /** 플레이어 좌석 순서 */
   players: Player[]

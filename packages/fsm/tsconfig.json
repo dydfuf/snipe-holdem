@@ -5,7 +5,6 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "declaration": true,
-    "composite": true,
     "strict": true,
     "rootDir": "src",
     "outDir": "dist",
@@ -13,23 +12,5 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/test/**/*", "tests/**/*", "dist", "node_modules"],
-  "files": [
-    "src/index.ts",
-    "src/machines/index.ts",
-    "src/machines/game.machine.ts",
-    "src/machines/betting.machine.ts",
-    "src/actions/index.ts",
-    "src/actions/addPlayer.ts",
-    "src/actions/bumpVersion.ts",
-    "src/actions/dealCards.ts",
-    "src/actions/payWinner.ts",
-    "src/guards/index.ts",
-    "src/guards/canJoin.ts",
-    "src/types/context.ts",
-    "src/types/cards.ts",
-    "src/types/events.ts",
-    "src/utils/deck.ts",
-    "src/utils/rank.ts"
-  ]
+  "exclude": ["src/test/**/*", "tests/**/*", "dist", "node_modules"]
 }
