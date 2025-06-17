@@ -1,5 +1,6 @@
 import { gameMachine } from '@repo/fsm'
 import { createActor } from 'xstate'
+import { logEvent } from './services/eventlog.impl'
 import { loadSnapshot, saveSnapshot } from './services/snapshot.impl'
 
 // CloudFlare Workers Durable Object 타입 확장
@@ -17,7 +18,7 @@ export class RoomDO implements DurableObject {
     this.state = state as ExtendedDurableObjectState
     this.env = env
 
-    // XState v5 createActor with input
+    // XState v5 createActor with input (AGENTS.md 섹션 2-3)
     this.roomActor = createActor(gameMachine as any, {
       input: { rng: () => Math.random() },
     })
@@ -26,8 +27,23 @@ export class RoomDO implements DurableObject {
     this.roomActor.start()
     this.subscribeToActor()
 
+    // 스냅샷 복원 시도
+    this.loadInitialSnapshot()
+
     // 5초마다 스냅샷 알람 설정
     this.state.setAlarm(Date.now() + 5_000)
+  }
+
+  private async loadInitialSnapshot() {
+    try {
+      const snapshot = await loadSnapshot(this.env.DB, this.state.id.toString())
+      if (snapshot) {
+        // 스냅샷이 있으면 복원
+        this.roomActor.send({ type: 'RESTORE_SNAPSHOT', data: snapshot.data })
+      }
+    } catch (error) {
+      console.warn('Failed to load initial snapshot:', error)
+    }
   }
 
   async fetch(req: Request): Promise<Response> {
@@ -62,9 +78,19 @@ export class RoomDO implements DurableObject {
     try {
       this.sockets.add(ws)
 
-      ws.addEventListener('message', (e) => {
+      ws.addEventListener('message', async (e) => {
         try {
           const intent = JSON.parse(e.data as string)
+
+          // 이벤트 로깅 (AGENTS.md 섹션 5 Roll-forward only)
+          const currentSnapshot = this.roomActor.getSnapshot()
+          await logEvent(
+            this.env.DB,
+            this.state.id.toString(),
+            currentSnapshot.context?.version || 0,
+            intent
+          )
+
           // ClientIntent를 Room Actor로 전송
           this.roomActor.send(intent)
         } catch {
